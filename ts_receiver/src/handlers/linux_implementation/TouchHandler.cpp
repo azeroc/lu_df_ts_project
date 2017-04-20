@@ -1,6 +1,6 @@
 #include <linux/limits.h>
 #include <iostream>
-#include "TouchHandler.h"
+#include "handlers/TouchHandler.h"
 
 void TestClass::TestMsg()
 {
