@@ -19,6 +19,11 @@ add_executable(ts_sender
     ${tssend_headers}
 )
 
+# Set executable name
+set_target_properties(ts_sender PROPERTIES
+    OUTPUT_NAME "ts_sender" 
+)
+
 # Link shared library
 target_link_libraries(ts_sender shared)
 

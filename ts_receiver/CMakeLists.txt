@@ -50,6 +50,11 @@ else()
 	message( FATAL_ERROR "This platform is not supported for ts_receiver" )
 endif()
 
+# Set executable name
+set_target_properties(ts_receiver PROPERTIES
+    OUTPUT_NAME "ts_receiver"
+)
+
 # Link common library
 target_link_libraries(ts_receiver shared)
 
