@@ -23,6 +23,10 @@ target_include_directories(shared
         $<INSTALL_INTERFACE:include>
     PRIVATE 
         src)
+        
+# Link to boost library
+target_link_libraries(shared
+    boost)
 
 # Set up Visual Studio source groups
 set( REG_EXT "[^/]*([.]cpp|[.]c|[.]h|[.]hpp)$")
