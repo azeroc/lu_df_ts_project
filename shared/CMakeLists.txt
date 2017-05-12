@@ -2,9 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 
 # Collect and specify platform-specific source files
 file(GLOB shared_srcs
-    "src/Main.cpp"
     "src/*.cpp"
-    "src/*.h"
 )
 file(GLOB shared_headers
     "include/*.h"
@@ -24,8 +22,9 @@ target_include_directories(shared
     PRIVATE 
         src)
         
-# Link to boost library
+# Link to boost compiled component libraries and the header-only library
 target_link_libraries(shared
+    ${Boost_LIBRARIES}
     boost)
 
 # Set up Visual Studio source groups

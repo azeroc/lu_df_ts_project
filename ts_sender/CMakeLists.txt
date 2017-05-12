@@ -5,9 +5,8 @@ include_directories("include")
 
 # Collect and specify platform-specific source files
 file(GLOB tssend_srcs
-    "src/Main.cpp"
+    "src/main.cpp"
     "src/*.cpp"
-    "src/*.h"
 )
 file(GLOB tssend_headers
     "include/*.h"
