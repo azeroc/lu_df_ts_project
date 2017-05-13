@@ -51,7 +51,7 @@ namespace ts_util
         return bytes;
     }
 
-    inline void fill_byte_vector(std::vector<std::uint8_t>& src, std::vector<std::uint8_t>& dst, std::uint32_t start_pos = 0)
+    inline void fill_byte_vector(const std::vector<std::uint8_t>& src, std::vector<std::uint8_t>& dst, std::uint32_t start_pos = 0)
     {
         std::uint32_t current_pos = start_pos;
         for (auto src_it = src.begin(); src_it != src.end() && current_pos < dst.size(); src_it++)

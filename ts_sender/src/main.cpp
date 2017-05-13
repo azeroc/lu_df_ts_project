@@ -14,9 +14,6 @@ int main(int argc, char* argv[])
 
     try
     {
-        std::string address = argv[1];
-        int port = std::stoi(argv[2]);
-
         std::cout << "Inititalizing TCP client instance. " << std::endl;
 
         boost::asio::io_service io_service;

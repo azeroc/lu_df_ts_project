@@ -1,7 +1,7 @@
 #include <iostream>
 #include "touch_control.h"
 #include "tcp_ts_server.h"
-#include "Constants.h"
+#include "constants.h"
 
 int main(int argc, char* argv[])
 {

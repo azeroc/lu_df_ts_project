@@ -1,5 +1,5 @@
 #pragma once
-#include "Common.h"
+#include "common.h"
 #include "touch_structure.h"
 
 // This packet class implements and uses buffers directly,
