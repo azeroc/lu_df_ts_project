@@ -17,7 +17,7 @@ public:
     };
 
     touch_event_parser(boost::asio::io_service& io_service, 
-        const char* input, 
+        std::string input, 
         touch_event_parser::input_type type, 
         boost::shared_ptr<tcp_ts_client> tcp_client) 
     {
@@ -42,14 +42,14 @@ private:
 
     void on_touch_data_receive(std::vector<touch_data> container);
 
-    void initialize_file_parser(boost::asio::io_service& io_service, const char* input)
+    void initialize_file_parser(boost::asio::io_service& io_service, std::string input)
     {
     }
 
 #ifdef linux
     boost::shared_ptr<dev_monitor> dev_mon;
 
-    void initialize_dev_mon(boost::asio::io_service& io_service, const char* input)
+    void initialize_dev_mon(boost::asio::io_service& io_service, std::string input)
     {
         dev_mon = boost::make_shared<dev_monitor>(io_service, input,
                 boost::bind(&touch_event_parser::on_touch_data_receive,

@@ -2,6 +2,7 @@
 #include "common.h"
 #include "tcp_session.h"
 #include "touch_structure.h"
+#include "touch_control.h"
 
 void tcp_ts_server::listen()
 {
@@ -26,8 +27,10 @@ void tcp_ts_server::accept_handler(tcp_session::pointer new_session, const boost
             << new_session->socket().remote_endpoint().port()
             << "] Connection established."
             << std::endl;
-        get_std_io_mutex().unlock();
 
+        touch_control::instance().print_peer_config_data(new_session->socket().remote_endpoint().address().to_string());
+        get_std_io_mutex().unlock();
+        
         new_session->read_touch_packets();
     }
 

@@ -4,8 +4,9 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include <fstream>
+#include <map>
 #include <vector>
-#include <deque>
 #include <cstdint> // portable fixed-size data types
 #include <mutex>
 
@@ -88,5 +89,11 @@ namespace ts_util
             dst[current_pos] = *src_it;
             current_pos++;
         }
+    }
+
+    inline bool file_exists(std::string filename)
+    {
+        std::ifstream f(filename.c_str());
+        return f.good();
     }
 }

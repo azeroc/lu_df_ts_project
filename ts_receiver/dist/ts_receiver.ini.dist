@@ -1,0 +1,48 @@
+[ts_receiver]
+
+# port info (uint32):
+#   specifies port used for touch signal data TCP/IP listening
+port = 55555
+
+# senders.count info (uint32):
+#   specifies how many ts_sender instances will be handled
+#   used to properly calculate ts_sender sent touch coordinates on server
+senders.count = 2
+
+# senders configuration info:
+#   senders config keys follow following format: senders.<index>.<config key>
+#       -  indexing starts at 1
+#       -  all indexes up to senders.count must be defined
+#   senders.<index>.peer is ipv4 address/hostname of ts_sender instance
+#   senders.<index>.x_max is maximum X value (uint32) from /dev/input/event* ABS_MT_POSITION_X
+#   senders.<index>.x_res is width resolution of ts_sender machine (e.g. in case 1080p resolution value would be 1920)
+#   senders.<index>.y_max is maximum Y value (uint32) from /dev/input/event* ABS_MT_POSITION_X
+#   senders.<index>.y_res is width resolution of ts_sender machine (e.g. in case 1080p resolution value would be 1080)
+#   senders.<index>.region_x1 is starting x of server-side mappable region (must be smaller than x2),
+#                             which is used to map received ts_sender touch coordinates on ts_receiver machine
+#   senders.<index>.region_x2 is ending x of server-side mappable region (must be greater than x1),
+#                             which is used to map received ts_sender touch coordinates on ts_receiver machine
+#   senders.<index>.region_y1 is starting y of server-side mappable region (must be smaller than y2),
+#                             which is used to map received ts_sender touch coordinates on ts_receiver machine
+#   senders.<index>.region_y2 is ending y of server-side mappable region (must be greater than y1),
+#                             which is used to map received ts_sender touch coordinates on ts_receiver machine
+#   NOTE: use evtest tool to find out x_max/y_max values (different monitors can have different max values)
+senders.1.peer = 192.168.1.77
+senders.1.x_max = 32767
+senders.1.x_res = 1920
+senders.1.y_max = 32767
+senders.1.y_res = 1080
+senders.1.region_x1 = 0
+senders.1.region_x2 = 1920
+senders.1.region_y1 = 0
+senders.1.region_y2 = 1080
+
+senders.2.peer = 192.168.1.66
+senders.2.x_max = 4095
+senders.2.x_res = 1920
+senders.2.y_max = 4095
+senders.2.y_res = 1080
+senders.2.region_x1 = 0
+senders.2.region_x2 = 1920
+senders.2.region_y1 = 0
+senders.2.region_y2 = 1080

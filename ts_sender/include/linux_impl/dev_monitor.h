@@ -23,8 +23,8 @@ public:
         resolution_y = 1080
     };
 
-    dev_monitor(boost::asio::io_service& io_service, const char* devspec, on_touch_data_function on_touch_data) 
-        : sd(io_service, open(devspec, O_RDONLY)), on_touch_data(on_touch_data)
+    dev_monitor(boost::asio::io_service& io_service, std::string dev_path, on_touch_data_function on_touch_data) 
+        : sd(io_service, open(dev_path.c_str(), O_RDONLY)), on_touch_data(on_touch_data)
     {
         current_touch_slot = 0;
         read_events();

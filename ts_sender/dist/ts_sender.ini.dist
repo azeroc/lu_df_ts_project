@@ -1,0 +1,19 @@
+[ts_sender]
+
+# mode info:
+#   dev - load input as device event input source
+#   test - load input as a test file with test data
+mode = dev
+
+# input info:
+#   if mode is "dev": specifies what device event input file (/dev/input/event*)
+#   if mode is "test": specifies what test file to load and use its test data for sending simulation
+input = /dev/input/event0
+
+# host info:
+#   specifies ipv4 address or hostname used for touch signal data TCP/IP sending
+host = 127.0.0.1
+
+# port info:
+#   specifies port used for touch signal data TCP/IP sending
+port = 55555

@@ -27,11 +27,13 @@ else()
     message( FATAL_ERROR "This platform is not supported for ts_receiver" )
 endif()
 
-
 # Set executable name
 set_target_properties(ts_sender PROPERTIES
     OUTPUT_NAME "ts_sender" 
 )
+
+# Add configuration file
+configure_file("dist/ts_sender.ini.dist" "${CMAKE_BINARY_DIR}/build/ts_sender.ini" COPYONLY)
 
 # Link shared library
 target_link_libraries(ts_sender shared)

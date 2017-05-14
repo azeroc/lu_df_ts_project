@@ -37,6 +37,9 @@ set_target_properties(ts_receiver PROPERTIES
     OUTPUT_NAME "ts_receiver"
 )
 
+# Add configuration file
+configure_file("dist/ts_receiver.ini.dist" "${CMAKE_BINARY_DIR}/build/ts_receiver.ini" COPYONLY)
+
 # Link common library
 target_link_libraries(ts_receiver shared)
 
