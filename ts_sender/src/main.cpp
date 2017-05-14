@@ -8,12 +8,14 @@ void load_config(std::string config_file)
 {
     std::vector<std::string> server_keys
     {
-        "port",
-        "senders.count"
+        "mode",
+        "input",
+        "host",
+        "port"
     };
 
     // Get initial server parameters
-    config_mgr::instance().load(config_file, "ts_receiver", server_keys, true);
+    config_mgr::instance().load(config_file, "ts_sender", server_keys, true);
 }
 
 int main(int argc, char* argv[])
