@@ -5,27 +5,52 @@
 
 void tcp_session::read_touch_packets()
 {
-    network_packet packet(4 + network_packet::max_packet_size);
+    read_header();
+}
 
-    session_socket.async_read_some(packet,
-        boost::bind(&tcp_session::read_touch_packet_callback,
+void tcp_session::read_header()
+{
+    boost::shared_ptr<network_packet> packet = boost::make_shared<network_packet>(4);
+
+    session_socket.async_read_some(*packet,
+        boost::bind(&tcp_session::read_header_callback,
             this->shared_from_this(),
             packet,
             boost::asio::placeholders::error,
             boost::asio::placeholders::bytes_transferred));
 }
 
-void tcp_session::read_touch_packet_callback(const network_packet& packet, const boost::system::error_code& error, size_t bytes_transferred)
+void tcp_session::read_header_callback(boost::shared_ptr<network_packet> packet, const boost::system::error_code& error, size_t bytes_transferred)
 {
     if (!error)
     {
-        if (bytes_transferred < (4 + touch_data::touch_data_size))
+        std::uint32_t item_size = network_packet::deserialize_size(*packet);
+        boost::shared_ptr<network_packet> packet2 = boost::make_shared<network_packet>(item_size * touch_data::touch_data_size);
+
+        session_socket.async_read_some(*packet2,
+            boost::bind(&tcp_session::read_touch_packet_callback,
+                this->shared_from_this(),
+                packet2,
+                boost::asio::placeholders::error,
+                boost::asio::placeholders::bytes_transferred));
+    }
+    else
+    {
+        on_error(this->shared_from_this(), error, tcp_session::error_origin::read);
+    }
+}
+
+void tcp_session::read_touch_packet_callback(boost::shared_ptr<network_packet> packet, const boost::system::error_code& error, size_t bytes_transferred)
+{
+    if (!error)
+    {
+        if (bytes_transferred < (touch_data::touch_data_size))
         {
             on_error(this->shared_from_this(), error, tcp_session::error_origin::bad_packet_small);
         }
         else
         {
-            std::vector<touch_data> container = network_packet::deserialize_touch_data_container(packet);
+            std::vector<touch_data> container = network_packet::deserialize_touch_data_container(*packet);
             on_read_finish(this->shared_from_this(), container);
         }
     }

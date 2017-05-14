@@ -41,6 +41,7 @@ public:
     const boost::asio::mutable_buffer* end() const { return &mutable_buffer + 1; }
 
 public: // Static helper methods for serialization and deserialization
+    static std::uint32_t deserialize_size(const network_packet& packet);
     static network_packet serialize_touch_data_container(const std::vector<touch_data>& container);
     static std::vector<touch_data> deserialize_touch_data_container(const network_packet& packet);
 

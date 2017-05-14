@@ -51,7 +51,9 @@ private:
         this->on_error = on_error;
     }
 
-    void read_touch_packet_callback(const network_packet& packet, const boost::system::error_code& error, size_t bytes_transferred);
+    void read_header();
+    void read_header_callback(boost::shared_ptr<network_packet> packet, const boost::system::error_code& error, size_t bytes_transferred);
+    void read_touch_packet_callback(boost::shared_ptr<network_packet> packet, const boost::system::error_code& error, size_t bytes_transferred);
     void write_touch_packet_container_callback(const boost::system::error_code& error);
 
     // Variables
