@@ -1,8 +1,11 @@
 #include "tcp_session.h"
+#include "common.h"
+#include "packet_structure.h"
+#include "touch_structure.h"
 
-void tcp_session::read_touch_packet()
+void tcp_session::read_touch_packets()
 {
-    network_packet packet(touch_data::touch_data_size);
+    network_packet packet(4 + network_packet::max_packet_size);
 
     session_socket.async_read_some(packet,
         boost::bind(&tcp_session::read_touch_packet_callback,
@@ -16,8 +19,15 @@ void tcp_session::read_touch_packet_callback(const network_packet& packet, const
 {
     if (!error)
     {
-        touch_data data = network_packet::deserialize_touch_data(packet);
-        on_read_finish(this->shared_from_this(), data);
+        if (bytes_transferred < (4 + touch_data::touch_data_size))
+        {
+            on_error(this->shared_from_this(), error, tcp_session::error_origin::bad_packet_small);
+        }
+        else
+        {
+            std::vector<touch_data> container = network_packet::deserialize_touch_data_container(packet);
+            on_read_finish(this->shared_from_this(), container);
+        }
     }
     else
     {
@@ -25,16 +35,16 @@ void tcp_session::read_touch_packet_callback(const network_packet& packet, const
     }
 }
 
-void tcp_session::write_touch_packet(const touch_data& data)
+void tcp_session::write_touch_packet_container(const std::vector<touch_data>& container)
 {
-    network_packet packet = network_packet::serialize_touch_data(data);
+    network_packet packet = network_packet::serialize_touch_data_container(container);
     session_socket.async_send(packet,
-        boost::bind(&tcp_session::write_touch_packet_callback,
+        boost::bind(&tcp_session::write_touch_packet_container_callback,
             this->shared_from_this(),
             boost::asio::placeholders::error));
 }
 
-void tcp_session::write_touch_packet_callback(const boost::system::error_code& error)
+void tcp_session::write_touch_packet_container_callback(const boost::system::error_code& error)
 {
     if (!error)
     {

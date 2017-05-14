@@ -27,46 +27,76 @@ void tcp_ts_client::on_connection(const boost::system::error_code& error)
 {
     if (!error)
     {
+        get_std_io_mutex().lock();
         std::cout << "successful!" << std::endl;
-        std::cout << "Client ready! Sending touch event packets now..." << std::endl;
 
         // Enable keep-alive for better sustained connection
         boost::asio::socket_base::keep_alive option(true);
         server_session->socket().set_option(option);
 
-        send_touch_event();
+        std::cout << "Client ready! Accepting touch input send requests..." << std::endl;
+        get_std_io_mutex().unlock();
     }
     else
     {
+        get_std_io_mutex().lock();
         std::cout << "failed!" << std::endl;
         std::cout << "Error code: " << error.value() << std::endl;
         std::cout << "Error message: " << error.message() << std::endl;
+        get_std_io_mutex().unlock();
         exit(2);
     }
 }
 
-void tcp_ts_client::send_touch_event()
+void tcp_ts_client::send_touch_data_container(const std::vector<touch_data>& container)
 {
-    // Build next touch event data struct from input events
+    // Output sent touch data
+    get_std_io_mutex().lock();
+    std::cout << "[Connection to: "
+        << server_session->socket().remote_endpoint().address().to_string()
+        << ":" 
+        << server_session->socket().remote_endpoint().port()
+        << "]"
+        << std::endl;
 
-    // Quick test
-    
-    touch_data data;
-    data.slot = std::rand() % 10;
-    data.tracking_id = std::rand() % 65565;
-    data.x = std::rand() % 4096;
-    data.y = std::rand() % 4096;
+    for (size_t i = 0; i < container.size(); i++)
+    {
+        touch_data data = container[i];
+        std::cout << "{ slot = "
+        << data.slot
+        << ", tracking_id = "
+        << data.tracking_id
+        << ", x = "
+        << data.x
+        << ", y = "
+        << data.y
+        << " }"
+        << std::endl;
+    }
+    get_std_io_mutex().unlock();
 
-    server_session->write_touch_packet(data);
+    server_session->write_touch_packet_container(container);
 }
 
 void tcp_ts_client::on_write_finish(boost::shared_ptr<tcp_session> session)
 {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    send_touch_event();
 }
 
 void tcp_ts_client::on_error(boost::shared_ptr<tcp_session> session, const boost::system::error_code & error, tcp_session::error_origin origin)
 {
-
+    if (origin == tcp_session::error_origin::write)
+    {
+        get_std_io_mutex().lock();
+        std::cerr << "[Connection to: "
+            << session->socket().remote_endpoint().address().to_string()
+            << ":"
+            << session->socket().remote_endpoint().port()
+            << "] ERROR ("
+            << error.value()
+            << "): "
+            << error.message()
+            << std::endl;
+        get_std_io_mutex().unlock();
+        exit(2);
+    }
 }

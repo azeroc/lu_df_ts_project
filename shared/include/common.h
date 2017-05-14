@@ -5,6 +5,7 @@
 #include <thread>
 #include <iostream>
 #include <vector>
+#include <deque>
 #include <cstdint> // portable fixed-size data types
 #include <mutex>
 
@@ -41,7 +42,35 @@ namespace ts_util
         return a;
     }
 
+    inline std::int32_t bytes_to_int32(const std::vector<std::uint8_t>& bytes, std::uint32_t start_pos = 0)
+    {        
+        std::int32_t a = 0;
+
+        if (start_pos < bytes.size())
+        {
+            int current_pos = start_pos;
+
+            for (std::uint32_t i = 0; i < 4 && (current_pos + i) < bytes.size(); i++)
+            {
+                a = a | (bytes[current_pos] << (8 * (3 - i)));
+                current_pos++;
+            }
+        }
+
+        return a;
+    }
+
     inline std::vector<std::uint8_t> uint32_to_bytes(std::uint32_t a)
+    {
+        std::vector<std::uint8_t> bytes(4);
+        bytes[0] = (a >> 24) & 0xff;
+        bytes[1] = (a >> 16) & 0xff;
+        bytes[2] = (a >> 8) & 0xff;
+        bytes[3] = a & 0xff;
+        return bytes;
+    }
+
+    inline std::vector<std::uint8_t> int32_to_bytes(std::int32_t a)
     {
         std::vector<std::uint8_t> bytes(4);
         bytes[0] = (a >> 24) & 0xff;

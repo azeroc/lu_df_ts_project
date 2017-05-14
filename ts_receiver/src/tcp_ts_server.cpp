@@ -28,13 +28,13 @@ void tcp_ts_server::accept_handler(tcp_session::pointer new_session, const boost
             << std::endl;
         get_std_io_mutex().unlock();
 
-        new_session->read_touch_packet();
+        new_session->read_touch_packets();
     }
 
     listen();
 }
 
-void tcp_ts_server::on_read_finish(boost::shared_ptr<tcp_session> session, const touch_data& data)
+void tcp_ts_server::on_read_finish(boost::shared_ptr<tcp_session> session, const std::vector<touch_data>& container)
 {
     // Handle received touch data
     get_std_io_mutex().lock();
@@ -42,7 +42,12 @@ void tcp_ts_server::on_read_finish(boost::shared_ptr<tcp_session> session, const
         << session->socket().remote_endpoint().address().to_string()
         << ":" 
         << session->socket().remote_endpoint().port()
-        << "] slot = "
+        << "]"
+        << std::endl;
+    for (size_t i = 0; i < container.size(); i++)
+    {
+        touch_data data = container[i];
+        std::cout << "{ slot = "
         << data.slot
         << ", tracking_id = "
         << data.tracking_id
@@ -50,11 +55,13 @@ void tcp_ts_server::on_read_finish(boost::shared_ptr<tcp_session> session, const
         << data.x
         << ", y = "
         << data.y
+        << " }"
         << std::endl;
+    }
     get_std_io_mutex().unlock();
 
     // Continue receiving packets
-    session->read_touch_packet();
+    session->read_touch_packets();
 }
 
 void tcp_ts_server::on_error(boost::shared_ptr<tcp_session> session, const boost::system::error_code & error, tcp_session::error_origin origin)
@@ -72,5 +79,19 @@ void tcp_ts_server::on_error(boost::shared_ptr<tcp_session> session, const boost
             << error.message()
             << std::endl;
         get_std_io_mutex().unlock();
+    }
+    else if (origin == tcp_session::error_origin::bad_packet_small)
+    {
+        get_std_io_mutex().lock();
+        std::cout << "[Client: "
+            << session->socket().remote_endpoint().address().to_string()
+            << ":"
+            << session->socket().remote_endpoint().port()
+            << "] Bad packet (packet too small to gain any valuable information)"
+            << std::endl;
+        get_std_io_mutex().unlock();
+
+        // Continue receiving packets
+        session->read_touch_packets();
     }
 }

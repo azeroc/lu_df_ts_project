@@ -16,7 +16,7 @@ private:
 
     void accept_handler(tcp_session::pointer new_session, const boost::system::error_code& error);
 
-    void on_read_finish(boost::shared_ptr<tcp_session> session, const touch_data& data);
+    void on_read_finish(boost::shared_ptr<tcp_session> session, const std::vector<touch_data>& container);
     void on_write_finish(boost::shared_ptr<tcp_session> session) {}; // Not used for server-side
     void on_error(boost::shared_ptr<tcp_session> session, const boost::system::error_code & error, tcp_session::error_origin origin);
     std::mutex& get_std_io_mutex()

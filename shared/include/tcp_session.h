@@ -10,6 +10,7 @@ public:
     {
         write,
         read,
+        bad_packet_small,
         unknown
     };
 
@@ -17,7 +18,7 @@ public:
     typedef boost::shared_ptr<tcp_session> pointer;
 
     // Shortening function types
-    typedef boost::function<void(boost::shared_ptr<tcp_session>, const touch_data&)> read_callback_function;
+    typedef boost::function<void(boost::shared_ptr<tcp_session>, const std::vector<touch_data>&)> read_callback_function;
     typedef boost::function<void(boost::shared_ptr<tcp_session>)> write_callback_function;
     typedef boost::function<void(boost::shared_ptr<tcp_session>, const boost::system::error_code&, tcp_session::error_origin)> error_function;
 
@@ -35,8 +36,8 @@ public:
         return session_socket;
     }
 
-    void read_touch_packet();
-    void write_touch_packet(const touch_data& data);
+    void read_touch_packets();
+    void write_touch_packet_container(const std::vector<touch_data>& container);
 
 private:
     tcp_session(boost::asio::io_service& io_service, 
@@ -51,8 +52,7 @@ private:
     }
 
     void read_touch_packet_callback(const network_packet& packet, const boost::system::error_code& error, size_t bytes_transferred);
-
-    void write_touch_packet_callback(const boost::system::error_code& error);
+    void write_touch_packet_container_callback(const boost::system::error_code& error);
 
     // Variables
     read_callback_function on_read_finish;
