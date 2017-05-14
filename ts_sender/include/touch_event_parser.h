@@ -25,7 +25,11 @@ public:
 
         if (type == touch_event_parser::input_type::device)
         {
+#ifdef linux
             initialize_dev_mon(io_service, input);
+#else
+            std::cerr << "Device monitor initialization is only supported on linux-type operating systems" << std::endl;
+#endif
         }
         else
         {
