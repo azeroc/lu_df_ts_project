@@ -9,6 +9,7 @@
 #include <vector>
 #include <cstdint> // portable fixed-size data types
 #include <mutex>
+#include <cmath>
 
 // BOOST LIBS
 #ifdef _WIN32 // Boost wants to know what is _WIN32_WINNT if compiling on Windows

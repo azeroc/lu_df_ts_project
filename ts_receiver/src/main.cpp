@@ -10,7 +10,9 @@ void load_config(std::string config_file)
     std::vector<std::string> server_keys
     {
         "port",
-        "senders.count"
+        "senders.count",
+        "host_x_res",
+        "host_y_res"
     };
 
     // Get initial server parameters
@@ -32,6 +34,7 @@ void load_config(std::string config_file)
         sender_keys.push_back("senders." + std::to_string(i) + ".region_x2");
         sender_keys.push_back("senders." + std::to_string(i) + ".region_y1");
         sender_keys.push_back("senders." + std::to_string(i) + ".region_y2");
+        sender_keys.push_back("senders." + std::to_string(i) + ".contacts_max");
     }
 
     // Update config storage with sender configuration

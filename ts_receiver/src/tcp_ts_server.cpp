@@ -63,6 +63,9 @@ void tcp_ts_server::on_read_finish(boost::shared_ptr<tcp_session> session, const
     }
     get_std_io_mutex().unlock();
 
+    // Inject touch events
+    touch_control::instance().handle_touch(container, session->socket().remote_endpoint().address().to_string());
+
     // Continue receiving packets
     session->read_touch_packets();
 }
