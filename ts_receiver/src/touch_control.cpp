@@ -66,7 +66,6 @@ void touch_control::handle_touch(const std::vector<touch_data>& peer_data, std::
     {
         peer_config_data config = peer_config_storage[peer];
         std::vector<touch_data> refined_data;
-        std::uint32_t index = config.index;
 
         for (touch_data item : peer_data)
         {
@@ -100,7 +99,7 @@ std::uint32_t touch_control::calculate_x(std::uint32_t peer_x, std::uint32_t pee
     double d_peer_x_res = peer_x_res;
     double d_peer_region_x1 = peer_region_x1;
     double d_peer_region_x2 = peer_region_x2;
-    double d_region_delta = peer_region_x2 - peer_region_x1;
+    double d_region_delta = d_peer_region_x2 - d_peer_region_x1;
     double d_result = 0;
 
     // Calculate correct x coordinate of the remote peer
@@ -126,9 +125,9 @@ std::uint32_t touch_control::calculate_y(std::uint32_t peer_y, std::uint32_t pee
     double d_peer_y = peer_y;
     double d_peer_y_max = peer_y_max;
     double d_peer_y_res = peer_y_res;
-    double d_host_region_y1 = peer_region_y1;
-    double d_host_region_y2 = peer_region_y2;
-    double d_region_delta = peer_region_y2 - peer_region_y1;
+    double d_peer_region_y1 = peer_region_y1;
+    double d_peer_region_y2 = peer_region_y2;
+    double d_region_delta = d_peer_region_y2 - d_peer_region_y1;
     double d_result = 0;
 
     // Calculate correct x coordinate of the remote peer
@@ -137,11 +136,11 @@ std::uint32_t touch_control::calculate_y(std::uint32_t peer_y, std::uint32_t pee
     // Resize and offset d_real_peer_x to fit into defined region
     if (d_peer_y_res > d_region_delta)
     {
-        d_result = (d_region_delta / d_peer_y_res) * d_real_peer_x + d_host_region_y1;
+        d_result = (d_region_delta / d_peer_y_res) * d_real_peer_x + d_peer_region_y1;
     }
     else
     {
-        d_result = (d_peer_y_res / d_region_delta) * d_real_peer_x + d_host_region_y1;
+        d_result = (d_peer_y_res / d_region_delta) * d_real_peer_x + d_peer_region_y1;
     }
 
     // Return refined coordinate
