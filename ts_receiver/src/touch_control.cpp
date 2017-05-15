@@ -88,7 +88,7 @@ void touch_control::handle_touch(const std::vector<touch_data>& peer_data, std::
             refined_data.push_back(refined_item);
         }
 
-        this->inject_touch_event(refined_data);
+        this->inject_input_event(refined_data);
     }
 }
 

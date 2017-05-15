@@ -58,6 +58,8 @@ void tcp_ts_server::on_read_finish(boost::shared_ptr<tcp_session> session, const
         << data.x
         << ", y = "
         << data.y
+        << ", upd_flags = "
+        << data.upd_flags
         << " }"
         << std::endl;
     }

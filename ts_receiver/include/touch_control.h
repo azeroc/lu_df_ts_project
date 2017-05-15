@@ -3,8 +3,10 @@
 #include "touch_structure.h"
 #include "touch_control.h"
 
+#define INJECT_TOUCH_INPUT_IS_BROKEN
 #ifdef WIN32
     #include "windows_impl/touch_injector.h"
+    #include "windows_impl/mouse_injector.h"
 #endif
 
 class touch_control
@@ -48,13 +50,18 @@ private:
     std::uint32_t host_y_res;
 
 #ifdef WIN32
-    touch_injector win_injector;
+    touch_injector win_injector_touch;
+    mouse_injector win_injector_mouse;
 #endif
 
-    void inject_touch_event(const std::vector<touch_data>& refined_data)
+    void inject_input_event(const std::vector<touch_data>& refined_data)
     {
 #ifdef WIN32
-        win_injector.update_touch_data(refined_data);
+#ifdef INJECT_TOUCH_INPUT_IS_BROKEN
+        win_injector_mouse.update_mouse_data(refined_data);
+#else
+        win_injector_touch.update_touch_data(refined_data);
+#endif
 #endif
     }
 
